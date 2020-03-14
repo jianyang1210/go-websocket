@@ -8,9 +8,14 @@ import (
 	"testing"
 )
 
+const (
+	groupName = "testGroup"
+	clientId  = "clientId"
+	systemId  = "publishSystem"
+	userId    = "userId"
+)
+
 func TestAddClient(t *testing.T) {
-	clientId := "clientId"
-	systemId := "publishSystem"
 	var manager = NewClientManager() // 管理者
 	conn := &websocket.Conn{}
 	clientSocket := NewClient(clientId, systemId, conn)
@@ -30,8 +35,6 @@ func TestAddClient(t *testing.T) {
 }
 
 func TestDelClient(t *testing.T) {
-	clientId := "clientId"
-	systemId := "publishSystem"
 	var manager = NewClientManager() // 管理者
 	conn := &websocket.Conn{}
 	clientSocket := NewClient(clientId, systemId, conn)
@@ -52,8 +55,6 @@ func TestDelClient(t *testing.T) {
 }
 
 func TestCount(t *testing.T) {
-	clientId := "clientId"
-	systemId := "publishSystem"
 	var manager = NewClientManager() // 管理者
 	conn := &websocket.Conn{}
 	clientSocket := NewClient(clientId, systemId, conn)
@@ -78,8 +79,6 @@ func TestCount(t *testing.T) {
 }
 
 func TestGetByClientId(t *testing.T) {
-	clientId := "clientId"
-	systemId := "publishSystem"
 	var manager = NewClientManager() // 管理者
 	conn := &websocket.Conn{}
 	clientSocket := NewClient(clientId, systemId, conn)
@@ -102,14 +101,11 @@ func TestAddClient2LocalGroup(t *testing.T) {
 	if err := readconfig.InitConfig(); err != nil {
 		panic(err)
 	}
-	clientId := "clientId"
-	systemId := "publishSystem"
-	userId := "userId"
+
 	var manager = NewClientManager() // 管理者
 	conn := &websocket.Conn{}
 	clientSocket := NewClient(clientId, systemId, conn)
 	manager.AddClient(clientSocket)
-	groupName := "testGroup"
 
 	Convey("测试添加分组", t, func() {
 		Convey("添加一个客户端到分组", func() {
@@ -125,14 +121,10 @@ func TestAddClient2LocalGroup(t *testing.T) {
 }
 
 func TestGetGroupClientList(t *testing.T) {
-	clientId := "clientId"
-	systemId := "publishSystem"
-	userId := "userId"
 	var manager = NewClientManager() // 管理者
 	conn := &websocket.Conn{}
 	clientSocket := NewClient(clientId, systemId, conn)
 	manager.AddClient(clientSocket)
-	groupName := "testGroup"
 
 	Convey("测试添加分组", t, func() {
 		Convey("获取一个存在的分组", func() {

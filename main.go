@@ -67,8 +67,8 @@ func getPort() string {
 	port := "666"
 
 	args := os.Args //获取用户输入的所有参数
-	if args != nil && len(args) >= 2 && len(args[1]) != 0 {
-		port = args[1];
+	if len(args) >= 2 && len(args[1]) != 0 {
+		port = args[1]
 	}
 
 	define.Port = port

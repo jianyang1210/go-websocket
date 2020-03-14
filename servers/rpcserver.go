@@ -106,8 +106,7 @@ func (s *RPCServer) GetOnlineList(ctx context.Context, args *GetGroupListArgs, r
 
 func InitRpcServer(port string) {
 	define.RPCPort = port
-	go createServer("tcp", ":"+port);
-	return
+	go createServer("tcp", ":"+port)
 }
 
 func createServer(network string, address string) {
@@ -120,6 +119,4 @@ func createServer(network string, address string) {
 	if err != nil {
 		panic(err)
 	}
-
-	return
 }

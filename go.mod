@@ -7,6 +7,7 @@ require (
 	github.com/go-playground/locales v0.13.0
 	github.com/go-playground/universal-translator v0.17.0
 	github.com/gomodule/redigo v2.0.0+incompatible
+	github.com/gopherjs/gopherjs v0.0.0-20181103185306-d547d1d9531e // indirect
 	github.com/gorilla/websocket v1.4.1
 	github.com/leodido/go-urn v1.2.0 // indirect
 	github.com/lestrrat-go/file-rotatelogs v2.3.0+incompatible
@@ -17,6 +18,7 @@ require (
 	github.com/sirupsen/logrus v1.2.0
 	github.com/smallnest/rpcx v0.0.0-20200104074109-4f758db059eb
 	github.com/smartystreets/goconvey v1.6.4
+	google.golang.org/appengine v1.4.0 // indirect
 	gopkg.in/go-playground/assert.v1 v1.2.1 // indirect
 	gopkg.in/go-playground/validator.v9 v9.31.0
 )

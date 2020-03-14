@@ -65,6 +65,5 @@ func TestRun(t *testing.T) {
 		Convey("Msg格式", func() {
 			So(retMessage.Msg, ShouldEqual, "success")
 		})
-
 	})
 }

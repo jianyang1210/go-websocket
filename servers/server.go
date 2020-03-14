@@ -97,7 +97,7 @@ func AddClient2Group(systemId string, groupName string, clientId string, userId 
 		if client, err := Manager.GetByClientId(clientId); err == nil {
 			//如果是单机，就直接添加到本地group了
 			Manager.AddClient2LocalGroup(groupName, client, userId)
-		};
+		}
 	}
 }
 
@@ -135,9 +135,10 @@ func GetOnlineList(systemId *string, groupName *string) map[string]interface{} {
 	} else {
 		//如果是单机服务，则只发送到本机
 		retList := Manager.GetGroupClientList(util.GenGroupKey(*systemId, *groupName))
-		for _, clientId := range retList {
-			clientList = append(clientList, clientId)
-		}
+		//for _, clientId := range retList {
+		//	clientList = append(clientList, clientId)
+		//}
+		clientList = append(clientList, retList...)
 	}
 
 	return map[string]interface{}{
@@ -154,36 +155,36 @@ func SendMessage2LocalClient(messageId, clientId string, sendUserId string, code
 		"clientId": clientId,
 	}).Info("发送到通道")
 	ToClientChan <- clientInfo{ClientId: clientId, MessageId: messageId, SendUserId: sendUserId, Code: code, Msg: msg, Data: data}
-	return
 }
 
 //监听并发送给客户端信息
 func WriteMessage() {
 	for {
-		select {
-		case clientInfo := <-ToClientChan:
-			log.WithFields(log.Fields{
-				"host":       define.LocalHost,
-				"port":       define.Port,
-				"clientId":   clientInfo.ClientId,
-				"messageId":  clientInfo.MessageId,
-				"sendUserId": clientInfo.SendUserId,
-				"code":       clientInfo.Code,
-				"msg":        clientInfo.Msg,
-				"data":       clientInfo.Data,
-			}).Info("发送到本机")
-			if conn, err := Manager.GetByClientId(clientInfo.ClientId); err == nil && conn != nil {
-				if err := Render(conn.Socket, clientInfo.MessageId, clientInfo.SendUserId, clientInfo.Code, clientInfo.Msg, clientInfo.Data); err != nil {
-					Manager.DisConnect <- conn
-					log.WithFields(log.Fields{
-						"host":     define.LocalHost,
-						"port":     define.Port,
-						"clientId": clientInfo.ClientId,
-						"msg":      clientInfo.Msg,
-					}).Error("客户端异常离线：" + err.Error())
-				}
+		//select {
+		//case clientInfo := <-ToClientChan:
+		clientInfo := <-ToClientChan
+		log.WithFields(log.Fields{
+			"host":       define.LocalHost,
+			"port":       define.Port,
+			"clientId":   clientInfo.ClientId,
+			"messageId":  clientInfo.MessageId,
+			"sendUserId": clientInfo.SendUserId,
+			"code":       clientInfo.Code,
+			"msg":        clientInfo.Msg,
+			"data":       clientInfo.Data,
+		}).Info("发送到本机")
+		if conn, err := Manager.GetByClientId(clientInfo.ClientId); err == nil && conn != nil {
+			if err := Render(conn.Socket, clientInfo.MessageId, clientInfo.SendUserId, clientInfo.Code, clientInfo.Msg, clientInfo.Data); err != nil {
+				Manager.DisConnect <- conn
+				log.WithFields(log.Fields{
+					"host":     define.LocalHost,
+					"port":     define.Port,
+					"clientId": clientInfo.ClientId,
+					"msg":      clientInfo.Msg,
+				}).Error("客户端异常离线：" + err.Error())
 			}
 		}
+		//}
 	}
 }
 
@@ -203,16 +204,17 @@ func PingTimer() {
 		ticker := time.NewTicker(heartbeatInterval)
 		defer ticker.Stop()
 		for {
-			select {
-			case <-ticker.C:
-				//发送心跳
-				for clientId, conn := range Manager.AllClient() {
-					if err := conn.Socket.WriteControl(websocket.PingMessage, []byte{}, time.Now().Add(time.Second)); err != nil {
-						Manager.DisConnect <- conn
-						log.Errorf("发送心跳失败: %s 总连接数：%d", clientId, Manager.Count())
-					}
+			//select {
+			//case <-ticker.C:
+			<-ticker.C
+			//发送心跳
+			for clientId, conn := range Manager.AllClient() {
+				if err := conn.Socket.WriteControl(websocket.PingMessage, []byte{}, time.Now().Add(time.Second)); err != nil {
+					Manager.DisConnect <- conn
+					log.Errorf("发送心跳失败: %s 总连接数：%d", clientId, Manager.Count())
 				}
 			}
+			//}
 		}
 	}()
 }

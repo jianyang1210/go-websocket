@@ -100,7 +100,6 @@ func GetIntranetIp() string {
 			if ipnet.IP.To4() != nil {
 				return ipnet.IP.String()
 			}
-
 		}
 	}
 

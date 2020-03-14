@@ -8,6 +8,7 @@ import (
 	"net/http"
 )
 
+// nolint
 func AccessTokenMiddleware(next http.HandlerFunc) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {

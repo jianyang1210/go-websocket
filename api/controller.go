@@ -45,7 +45,6 @@ func Render(w http.ResponseWriter, code int, msg string, data interface{}) (str 
 }
 
 func Validate(inputData interface{}) error {
-
 	validate := validator.New()
 	zh := zhongwen.New()
 	uni := ut.New(zh, zh)

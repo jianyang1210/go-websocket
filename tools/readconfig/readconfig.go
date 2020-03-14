@@ -1,7 +1,9 @@
 package readconfig
 
 import (
+	"fmt"
 	"github.com/astaxie/beego/config"
+	"github.com/sirupsen/logrus"
 	"os"
 	"strings"
 )
@@ -22,7 +24,7 @@ func InitConfig() (err error) {
 	if strings.Contains(path, "servers") {
 		path += "/.."
 	} else {
-		for key, _ := range lasTwoPath {
+		for key := range lasTwoPath {
 			if strings.Contains(path, key) {
 				path += "/../.."
 				break
@@ -35,13 +37,14 @@ func InitConfig() (err error) {
 	}
 
 	cluster, err := ConfigData.Bool("common::cluster")
-	if (err != nil) {
+	if err != nil {
 		return err
 	}
 
 	//如果设置了集群
 	if cluster {
 		//todo
+		logrus.Debug(fmt.Sprintf("cluster setting %v", cluster))
 	}
-	return
+	return nil
 }

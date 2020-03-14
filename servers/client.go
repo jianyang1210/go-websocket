@@ -21,7 +21,7 @@ type SendData struct {
 	Data *interface{}
 }
 
-func NewClient(clientId string, systemId string, socket *websocket.Conn) (*Client) {
+func NewClient(clientId string, systemId string, socket *websocket.Conn) *Client {
 	return &Client{
 		ClientId:    clientId,
 		SystemId:    systemId,
